@@ -1,0 +1,23 @@
+version: '2.13'
+services:
+  db:
+    container_name: pg_container
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: todo
+    volumes:
+      - /postgres_data/var/lib/postgresql/data
+    ports:
+      - "54321:5432"
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: app_admin@app_admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"

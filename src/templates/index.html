@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body style="margin: 0px; padding: 0px; background-color: #ffbf6e; height: 100%">
+<div style="display: flex; justify-content: space-between" id="footer" >
+    <div>
+        <h1 style="margin: 0px; padding: 10px; color: #773921">My tasks</h1>
+    </div>
+    <div>
+        <h1 style="margin: 0px; padding: 10px; color: #773921"><a href="/auth/logaut" class="logaut">Выход</a></h1>
+    </div>
+</div>
+<div style="background-color: #773921; width: 100%; height: 2px"></div>
+<div id="main" style="display: flex; justify-content: start; flex-wrap: wrap">
+    <div style="width: 300px">
+        <div style="display: flex; justify-content: space-between;padding: 10px">
+            <div class="triangle-left" onclick="minus_year(event)"></div>
+            <p id="data_filter_year"></p>
+            <div class="triangle-right"  onclick="plus_year(event)"></div>
+        </div>
+        <div style="background-color: #773921; width: 100%; height: 2px"></div>
+        <div style="display: flex; justify-content: center">
+            <div id="select_month">
+                <p class="choiсe_year" id="month_1" onclick="set_month(event)">Январь</p>
+                <p class="choiсe_year" id="month_2" onclick="set_month(event)">Февраль</p>
+                <p class="choiсe_year" id="month_3" onclick="set_month(event)">Март</p>
+                <p class="choiсe_year" id="month_4" onclick="set_month(event)">Апрель</p>
+                <p class="choiсe_year" id="month_5" onclick="set_month(event)">Май</p>
+                <p class="choiсe_year" id="month_6" onclick="set_month(event)">Июнь</p>
+                <p class="choiсe_year" id="month_7" onclick="set_month(event)">Июль</p>
+                <p class="choiсe_year" id="month_8" onclick="set_month(event)">Август</p>
+                <p class="choiсe_year" id="month_9" onclick="set_month(event)">Сентябрь</p>
+                <p class="choiсe_year" id="month_10" onclick="set_month(event)">Октябрь</p>
+                <p class="choiсe_year" id="month_11" onclick="set_month(event)">Ноябрь</p>
+                <p class="choiсe_year" id="month_12" onclick="set_month(event)">Декабрь</p>
+            </div>
+        </div>
+        <div style="background-color: #773921; width: 100%; height: 2px; margin-top: 8px"></div>
+        <div style="display: flex; justify-content: start; flex-wrap: wrap"  id="render_day">
+        </div>
+        <div style="display: flex; justify-content: center"><div id="search_day"></div></div>
+    </div>
+    <div style="background-color: #773921; width: 2px; height: 100vh"></div>
+
+
+    <div style="width: 40%">
+        <div style="display: flex; justify-content: center; text-align: center">
+            <button class="add_task">Добавить</button>
+        </div>
+        <div style="background-color: #773921; width: 100%; height: 2px"></div>
+        <div style="display: flex; justify-content: center; text-align: center">
+            <p id="render_date">Добавить</p>
+        </div>
+    </div>
+    <div style="background-color: #773921; width: 2px; height: 100vh"></div>
+
+
+    <div style="padding-left: 10px"><h1>Привет!!</h1></div>
+
+</div>
+</body>
+<style>
+.triangle-left {
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 25px solid #502718;
+}
+
+.triangle-right {
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 25px solid #502718;
+}
+.triangle-right:hover{
+    border-left: 25px solid #502718b5;
+    cursor: pointer;
+}
+.triangle-left:hover {
+    border-right: 25px solid #502718b5;
+    cursor: pointer;
+}
+p{
+    font-size: 20px;
+    color:#773921;
+    margin: 0px;
+    padding: 0px;
+    font-weight: bold;
+}
+.choiсe_year{
+    padding-top: 5px;
+    font-size: 25px;
+}
+.choiсe_year:hover{
+    color: #773921b2;
+    cursor: pointer;
+}
+.selected_month{
+
+    padding-top: 5px;
+    font-size: 25px;
+    cursor: pointer;
+    position: relative;
+    }
+.selected_month::before{
+      content: "";
+  position: absolute;
+  left: 70px;
+  bottom: 1px;
+  width: 150px;
+  height: 14px;
+  transform: skew(-12deg) translateX(-50%);
+  background: #34310b4a;
+  z-index: -1;
+    }
+.choice_day{
+
+    color:#773921;
+    font-weight: bold;
+    padding: 5px;
+    font-size: 25px;
+}
+.choice_day:hover{
+    color: #773921b2;
+    cursor: pointer;
+}
+.selected_day{
+
+    color:#773921;
+    font-weight: bold;
+    padding: 5px;
+    font-size: 25px;
+    cursor: pointer;
+    position: relative;
+    }
+.selected_day::before{
+      content: "";
+  position: absolute;
+  left: 13px;
+  bottom: 1px;
+  width: 20px;
+  height: 5px;
+  transform: skew(-12deg) translateX(-50%);
+  background: #34310b4a;
+  z-index: -1;
+    }
+.search_day{
+    margin-top: 40px;
+    display: inline-block;
+    text-decoration: none;
+    background-color: #773921;
+    color: #f8f0dc;
+    border: 0px solid #773921;
+    border-radius: 14px;
+    font-size: 16px;
+    padding: 7px 16px;
+    transition: all 0.8s ease;
+}
+.search_day:hover{
+    text-decoration: none;
+    background-color: #773921b2;
+    color: #ffeded;
+    border-color: #773921b2;
+    cursor: pointer;
+}
+.add_task{
+    margin: 5.5px;
+    display: inline-block;
+    text-decoration: none;
+    background-color: #773921;
+    color: #f8f0dc;
+    border: 0px solid #773921;
+    border-radius: 14px;
+    font-size: 16px;
+    padding: 7px 16px;
+    transition: all 0.8s ease;
+}
+.add_task:hover{
+    text-decoration: none;
+    background-color: #773921b2;
+    color: #ffeded;
+    border-color: #773921b2;
+    cursor: pointer
+}
+a.logaut:active, /* активная/посещенная ссылка */
+ /* при наведении */
+a.logaut {
+  text-decoration: none;
+  color: #773921;
+}
+a.logaut:hover{
+    color: #773921b2;
+}
+</style>
+<script>
+    months = {
+        '1': 'Января',
+        '2': 'Февраля',
+        '3': 'Марта',
+        '4': 'Апреля',
+        '5': 'Мая',
+        '6': 'Июня',
+        '7': 'Июля',
+        '8': 'Августа',
+        '9': 'Сентября',
+        '10': 'Октября',
+        '11': 'Ноября',
+        '12': 'Декабря',
+    }
+    window.localStorage.setItem('choice_year', 1)
+    if (window.localStorage.getItem('year') == null){
+        year = 2023}
+    else{
+        year = window.localStorage.getItem('year')
+    }
+    let root_year = document.getElementById('data_filter_year')
+        root_year.innerHTML = `Год: ${year}`
+    function plus_year(target){
+        year = Number(year) + 1
+        window.localStorage.setItem('year', year)
+        root_year.innerHTML = `Год: ${year}`
+        console.log(year)
+    }
+    function minus_year(target){
+        year = Number(year) - 1
+        window.localStorage.setItem('year', year)
+        root_year.innerHTML = `Год: ${year}`
+        console.log(year)
+    }
+    function set_month(target){
+        root_month = document.getElementById('select_month')
+        root_month.innerHTML =
+
+        `<p class="choiсe_year" id="month_1" onclick="set_month(event)">Январь</p>
+                <p class="choiсe_year" id="month_2" onclick="set_month(event)">Февраль</p>
+                <p class="choiсe_year" id="month_3" onclick="set_month(event)">Март</p>
+                <p class="choiсe_year" id="month_4" onclick="set_month(event)">Апрель</p>
+                <p class="choiсe_year" id="month_5" onclick="set_month(event)">Май</p>
+                <p class="choiсe_year" id="month_6" onclick="set_month(event)">Июнь</p>
+                <p class="choiсe_year" id="month_7" onclick="set_month(event)">Июль</p>
+                <p class="choiсe_year" id="month_8" onclick="set_month(event)">Август</p>
+                <p class="choiсe_year" id="month_9" onclick="set_month(event)">Сентябрь</p>
+                <p class="choiсe_year" id="month_10" onclick="set_month(event)">Октябрь</p>
+                <p class="choiсe_year" id="month_11" onclick="set_month(event)">Ноябрь</p>
+                <p class="choiсe_year" id="month_12" onclick="set_month(event)">Декабрь</p>`
+
+        document.getElementById(target.target.id).classList.add('selected_month')
+        document.getElementById(target.target.id).classList.toggle('choiсe_year')
+        document.getElementById(target.target.id)
+        window.localStorage.setItem('month', target.target.id.slice(6))
+        render_day()
+
+
+    }
+    function render_day(){
+        document.getElementById('search_day').innerHTML = ''
+        month = window.localStorage.getItem('month')
+        day_31 = [1, 3, 5, 7, 8, 10, 12]
+        if (day_31.includes(Number(month))){
+            count_day = 31
+        }
+        else if(Number(month) === 2){
+            count_day = 28
+        }
+        else {
+            count_day = 30
+        }
+        days = Array.from({length: count_day}, (_, index)=>index + 1)
+
+        day_root = document.getElementById('render_day')
+        day_root.innerHTML = ''
+        days.map(item=> {
+        day_root.innerHTML += `<div class="choice_day" id="day_${item}" onclick="set_day(event)">
+                                        ${item}
+                                </div>`
+        })
+
+    }
+    function set_day(target){
+        day = target.target.id.slice(4)
+        day_root.innerHTML = ''
+        document.getElementById('search_day').innerHTML = ''
+        days.map(item=> {
+        if (Number(day) === item){
+        day_root.innerHTML += `<div class="selected_day" id="day_${item}" onclick="set_day(event)">
+                                    ${item}
+                            </div>`
+        }
+        else {
+        day_root.innerHTML += `<div class="choice_day" id="day_${item}" onclick="set_day(event)">
+                                        ${item}
+                                </div>`}
+        })
+        document.getElementById('search_day').innerHTML += `<button class="search_day" onclick="search_day()">Найти</button>`
+
+    }
+
+
+    function search_day(){
+        window.localStorage.setItem('selected_day', day)
+        window.localStorage.setItem('selected_month', month)
+        window.localStorage.setItem('selected_year', year)
+        render_date()
+    }
+
+    function render_date(){
+        get_month_name = months[window.localStorage.getItem('selected_month')]
+        document.getElementById('render_date').innerHTML = `<p>${window.localStorage.getItem('selected_day')}
+                                                               ${get_month_name}
+                                                               ${window.localStorage.getItem('selected_year')} года</p>`
+
+    }
+    render_date()
+
+</script>
+</html>
