@@ -1,12 +1,12 @@
-from datetime import datetime
+from datetime import date
 from typing import Optional, Union, List
 
 from pydantic import BaseModel, Field, EmailStr
 
 
-class Task(BaseModel):
+class Shedule_Schema(BaseModel):
     id: Optional[int] = Field()
-    description: str
+    date: date
 
 
 class Status(BaseModel):
@@ -19,16 +19,16 @@ class Priority(BaseModel):
     title: str
 
 
-class Shedule(BaseModel):
-    id: Optional[int] = Field()
-    user_id: int
-    description: str
-    tasks: List[Task]
-    date: datetime = datetime.now().date()
-    status: Status
-    priority: Priority
-    # send_mail: EmailStr = None
-    send_tg: str = None
+# class Shedule(BaseModel):
+#     id: Optional[int] = Field()
+#     user_id: int
+#     description: str
+#     tasks: List[Task_Schema]
+#     date: datetime = datetime.now().date()
+#     status: Status
+#     priority: Priority
+#     # send_mail: EmailStr = None
+#     send_tg: str = None
 
 
 

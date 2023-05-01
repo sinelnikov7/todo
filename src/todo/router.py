@@ -1,5 +1,11 @@
-from fastapi import APIRouter
-from .schemas import Task, Shedule
+from datetime import datetime, date
+
+from fastapi import APIRouter, Depends
+from sqlalchemy import insert
+
+from .schemas import Shedule_Schema
+from .models import Shedule
+from database import async_session, get_session
 from database import async_session, get_session
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -8,6 +14,11 @@ to_do_router = APIRouter(
     tags=["ToDo"],
 )
 
-@to_do_router.post('/task', response_model=Task)
-async def add_task(task: Task):
-    return task
+@to_do_router.post('/task', response_model=Shedule_Schema)
+async def add_task(task: Shedule_Schema, session: AsyncSession = Depends(get_session)):
+    shedule = Shedule(date=task.date)
+    session.add(shedule)
+    await session.commit()
+    await session.refresh(shedule)
+    response = Shedule_Schema(**shedule.__dict__)
+    return response

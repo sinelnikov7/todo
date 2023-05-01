@@ -1,6 +1,7 @@
 import random
 import smtplib
 from fastapi import FastAPI, Request, Depends, Form, Response, Cookie, APIRouter
+from passlib.context import CryptContext
 from sqlalchemy import select, and_, insert, update
 from sqlalchemy.ext.asyncio import AsyncSession
 import jwt
@@ -21,6 +22,7 @@ SECRET = os.environ.get('SECRET')
 EMAIL_SENDER = os.environ.get('EMAIL_SENDER')
 EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 auth_router = APIRouter(
@@ -34,8 +36,8 @@ templates = Jinja2Templates(directory="templates/")
 async def registration(request: Request, name = Form(), surname = Form(),
                        email = Form(), password = Form(), session: AsyncSession = Depends(get_session)):
     number = random.randint(1000, 9999)
-
-    user = User(name=name, surname=surname, email=email, password=password, activate=False)
+    hash_password = pwd_context.hash(password)
+    user = User(name=name, surname=surname, email=email, password=hash_password, activate=False)
     key = Code(key=number)
     user.code = key
     session.add(user)
@@ -63,13 +65,16 @@ async def registration(request: Request, name = Form(), surname = Form(),
 @auth_router.post("/login", response_class=HTMLResponse)
 async def login(request: Request, email = Form(), password = Form(), session: AsyncSession = Depends(get_session)):
     try:
-        query = select(User).where(and_(User.email == email, User.password == password))
+        query = select(User).where(User.email == email)
         result = await session.execute(query)
         user = result.fetchone()[0]
-        token = jwt.encode({"user_id": user.id, "status": user.activate}, SECRET, algorithm="HS256")
-        template_response = RedirectResponse('http://127.0.0.1:8000', status_code=301)
-        template_response.set_cookie(key='access-token', value=token, httponly=True)
-        return template_response
+        if pwd_context.verify(password, user.password):
+            token = jwt.encode({"user_id": user.id, "status": user.activate}, SECRET, algorithm="HS256")
+            template_response = RedirectResponse('http://127.0.0.1:8000', status_code=301)
+            template_response.set_cookie(key='access-token', value=token, httponly=True)
+            return template_response
+        else:
+            raise Exception
     except:
         context = {
             "request": request,
