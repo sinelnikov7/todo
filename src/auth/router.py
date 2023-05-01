@@ -1,6 +1,7 @@
 import random
 import smtplib
 from fastapi import FastAPI, Request, Depends, Form, Response, Cookie, APIRouter
+from passlib.context import CryptContext
 from sqlalchemy import select, and_, insert, update
 from sqlalchemy.ext.asyncio import AsyncSession
 import jwt
