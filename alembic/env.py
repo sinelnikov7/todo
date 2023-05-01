@@ -4,7 +4,7 @@ from src.config import DB_CONFIG, DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
-from src.auth.models import Base
+from src.database import Base
 from src.auth.models import User, Code
 from src.todo.models import Shedule
 from alembic import context

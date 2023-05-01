@@ -6,11 +6,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 import jwt
 import dotenv
 import os
-from database import async_session
-from auth.schemas import User_schema, Login_shema
-from auth.models import User, Code
-from todo.router import to_do_router
-from auth.router import auth_router
+from src.database import async_session
+from src.auth.schemas import User_schema, Login_shema
+from src.auth.models import User, Code
+from src.todo.router import to_do_router
+from src.auth.router import auth_router
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.responses import RedirectResponse

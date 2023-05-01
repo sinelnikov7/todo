@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 import jwt
 import dotenv
 import os
-from database import async_session, get_session
+from src.database import async_session, get_session
 from .schemas import User_schema, Login_shema
 from .models import User, Code
 from fastapi.templating import Jinja2Templates

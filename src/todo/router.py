@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import insert
 from .schemas import Shedule_Schema
 from .models import Shedule
-from database import async_session, get_session
+from src.database import async_session, get_session
 from sqlalchemy.ext.asyncio import AsyncSession
 
 to_do_router = APIRouter(
