@@ -1,22 +1,19 @@
 import random
-import smtplib
-from fastapi import FastAPI, Request, Depends, Form, Response, Cookie, APIRouter
-from passlib.context import CryptContext
-from sqlalchemy import select, and_, insert, update
+from fastapi import Request, Depends, Form, APIRouter
+from sqlalchemy import select, update
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 import jwt
 import dotenv
 import os
-from src.database import async_session, get_session
-from .schemas import User_schema, Login_shema
+from src.database import get_session
 from .models import User, Code
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.responses import RedirectResponse
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from passlib.context import CryptContext
-from email.mime.application import MIMEApplication
+
+from worker import send_code
 
 dotenv.load_dotenv()
 SECRET = os.environ.get('SECRET')
@@ -31,37 +28,29 @@ auth_router = APIRouter(
     tags=["Auth"]
 )
 
-templates = Jinja2Templates(directory="templates/")
+templates = Jinja2Templates(directory="src/templates/")
 
 @auth_router.post("/registration", response_class=HTMLResponse)
 async def registration(request: Request, name = Form(), surname = Form(),
                        email = Form(), password = Form(), session: AsyncSession = Depends(get_session)):
-    number = random.randint(1000, 9999)
-    hash_password = pwd_context.hash(password)
-    user = User(name=name, surname=surname, email=email, password=hash_password, activate=False)
-    key = Code(key=number)
-    user.code = key
-    session.add(user)
-    await session.commit()
-    await session.refresh(user)
-    await session.close()
-    token = jwt.encode({"user_id": user.id, "status": False}, SECRET, algorithm="HS256")
-    template_response = templates.TemplateResponse('get_password.html', context={'request': request})
-    template_response.set_cookie(key='access-token', value=token, httponly=True)
-    email_sender = EMAIL_SENDER
-    password = EMAIL_PASSWORD
-    email_getter = user.email
-    smtp_server = smtplib.SMTP('smtp.yandex.ru', 587)
-    smtp_server.starttls()
-    msg = MIMEMultipart()
-    msg.attach(MIMEText(f"Здравствуйте {name} {surname}!\nВаш логин - {email}\nПароль - {password}\nДля продолжения введите проверочный код регистрации на сайте ToDo - {str(number)}"))
-    msg["From"] = email_sender
-    msg["Subject"] = "Код подтверждения регистрации на сайте ToDo"
-    smtp_server.set_debuglevel(1)
-    smtp_server.login(email_sender, password)
-    smtp_server.sendmail(email_sender, email_getter, msg.as_string())
-    smtp_server.quit()
-    return template_response
+    try:
+        number = random.randint(1000, 9999)
+        hash_password = pwd_context.hash(password)
+        user = User(name=name, surname=surname, email=email, password=hash_password, activate=False)
+        key = Code(key=number)
+        user.code = key
+        session.add(user)
+        await session.commit()
+        await session.refresh(user)
+        await session.close()
+        token = jwt.encode({"user_id": user.id, "status": False}, SECRET, algorithm="HS256")
+        template_response = templates.TemplateResponse('get_password.html', context={'request': request})
+        template_response.set_cookie(key='access-token', value=token)
+        send_code.delay(email, name, surname, password, number)
+        return template_response
+    except IntegrityError:
+        return templates.TemplateResponse('login.html', context={'request': request, 'error_registration': 'Пользователь с таким email уже зарегестрирован'})
+
 
 @auth_router.post("/login", response_class=HTMLResponse)
 async def login(request: Request, email = Form(), password = Form(), session: AsyncSession = Depends(get_session)):
@@ -72,7 +61,7 @@ async def login(request: Request, email = Form(), password = Form(), session: As
         if pwd_context.verify(password, user.password):
             token = jwt.encode({"user_id": user.id, "status": user.activate}, SECRET, algorithm="HS256")
             template_response = RedirectResponse('http://127.0.0.1:8000', status_code=301)
-            template_response.set_cookie(key='access-token', value=token, httponly=True)
+            template_response.set_cookie(key='access-token', value=token)
             return template_response
         else:
             raise Exception
@@ -117,3 +106,18 @@ async def login(request: Request):
     template_response = templates.TemplateResponse('login.html', context={"request": request})
     template_response.delete_cookie(key='access-token')
     return template_response
+
+@auth_router.get('/qqq')
+async def qqq(session: AsyncSession = Depends(get_session)):
+    # query = select(User).options(selectinload(User.code)).where(User.id == 1)
+    # result = await session.execute(query)
+    # result = result.fetchone()[0]
+    # print(result.code.key)
+    #
+    # query = select(Code).options(selectinload(Code.user)).where(Code.id == 1)
+    # result = await session.execute(query)
+    # result = result.fetchone()[0]
+    # print(result.user.name)
+    # result = send_code.delay(4, 4)
+    # print(result, '!!!!!!!!!!!!!!!!!!!')
+    return {"status":"200"}

@@ -1,5 +1,4 @@
-import random
-import smtplib
+from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, Request, Depends, Form, Response, Cookie
 from sqlalchemy import select, and_, insert, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -26,7 +25,8 @@ EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 app = FastAPI(title="Main")
 app.include_router(to_do_router)
 app.include_router(auth_router)
-templates = Jinja2Templates(directory="templates/")
+templates = Jinja2Templates(directory="src/templates/")
+app.mount("/static", StaticFiles(directory="src/static"), name="static")
 
 async def get_session() -> AsyncSession:
     async with async_session() as session:
@@ -146,6 +146,5 @@ async def get_user(id: int, response: Response,  session: AsyncSession = Depends
         "name": user.name,
         "surname": user.surname
     }
-
     return responses
 

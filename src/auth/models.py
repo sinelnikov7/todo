@@ -10,8 +10,8 @@ class User(Base):
     name = Column(String(50), nullable=False)
     surname = Column(String(50), nullable=False)
     activate = Column(Boolean, default=False)
-    activated = Column(Boolean, default=False)
     code = relationship('Code', back_populates="user", uselist=False)
+    shedule = relationship('Shedule', back_populates="user")
 
 class Code(Base):
     __tablename__ = 'codes'

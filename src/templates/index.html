@@ -3,19 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="{{ url_for('static', path='css/index.css') }}" rel="stylesheet">
 </head>
-<body style="margin: 0px; padding: 0px; background-color: #ffbf6e; height: 100%">
-<div style="display: flex; justify-content: space-between" id="footer" >
+
+
+<body style="margin: 0px; padding: 0px; background-color: #ffbf6e; background-image: url(/static/img/backround.jpg); height: 100%">
+<!--<body style="margin: 0px; padding: 0px; background-color: #ffbf6e; background: url(https://catherineasquithgallery.com/uploads/posts/2021-02/1613019197_184-p-abstraktsiya-na-oranzhevom-fone-206.jpg) no-repeat; height: 100%">-->
+<div style="display: flex; justify-content: space-between" id="header" class="header">
     <div>
-        <h1 style="margin: 0px; padding: 10px; color: #773921">My tasks</h1>
+        <h1 style="margin: 0px; padding-left: 10px; color: #773921">My tasks</h1>
     </div>
     <div>
-        <h1 style="margin: 0px; padding: 10px; color: #773921"><a href="/auth/logaut" class="logaut">Выход</a></h1>
+        <h1 style="margin: 0px; padding-right: 10px; color: #773921"><a href="/auth/logaut" class="logaut">Выход</a></h1>
     </div>
 </div>
-<div style="background-color: #773921; width: 100%; height: 2px"></div>
-<div id="main" style="display: flex; justify-content: start; flex-wrap: wrap">
-    <div style="width: 300px">
+<div style="background-color: #773921; min-width: 1214px; height: 2px"></div>
+<div id="main" style="display: flex; justify-content: start; flex-wrap: nowrap;">
+    <div style="min-width: 300px;width: 350px" class="saidbar">
         <div style="display: flex; justify-content: space-between;padding: 10px">
             <div class="triangle-left" onclick="minus_year(event)"></div>
             <p id="data_filter_year"></p>
@@ -43,161 +47,38 @@
         </div>
         <div style="display: flex; justify-content: center"><div id="search_day"></div></div>
     </div>
-    <div style="background-color: #773921; width: 2px; height: 100vh"></div>
+    <div style="background-color: #773921; min-width: 2px; min-height: 90vh"></div>
 
 
-    <div style="width: 40%">
-        <div style="display: flex; justify-content: center; text-align: center">
-            <button class="add_task">Добавить</button>
+    <div style="width: 55%; min-width: 600px">
+        <div id="button_shedule" style="display: flex; justify-content: center; text-align: center; height: 43px">
+            <button class="add_shedule" onclick="add_shedule(event)">Добавить</button>
         </div>
         <div style="background-color: #773921; width: 100%; height: 2px"></div>
         <div style="display: flex; justify-content: center; text-align: center">
-            <p id="render_date">Добавить</p>
+            <p id="render_date"></p>
         </div>
+
+        <div id="tasks"></div>
     </div>
-    <div style="background-color: #773921; width: 2px; height: 100vh"></div>
+    <div style="background-color: #773921; min-width: 2px; min-height: 90vh"></div>
 
 
-    <div style="padding-left: 10px"><h1>Привет!!</h1></div>
+    <div style="padding-left: 10px; min-width: 300px">
+        <p>В разработке:</p>
+        <p>В разработке:</p>
+        <p>В разработке:</p>
+        <p>В разработке:</p>
+        <p>В разработке:</p>
+        <p>В разработке:</p>
+    </div>
+
 
 </div>
+<div style="background-color: #773921; min-width: 1214px; height: 2px"></div>
+<div id="form"></div>
+<div class="footer" id="foter"><p style="color: black; font-size: 20px; padding: 10px">Email: sinelnikovby@gmail.com Telegram: @sinelnikovby</p></div>
 </body>
-<style>
-.triangle-left {
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-right: 25px solid #502718;
-}
-
-.triangle-right {
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 25px solid #502718;
-}
-.triangle-right:hover{
-    border-left: 25px solid #502718b5;
-    cursor: pointer;
-}
-.triangle-left:hover {
-    border-right: 25px solid #502718b5;
-    cursor: pointer;
-}
-p{
-    font-size: 20px;
-    color:#773921;
-    margin: 0px;
-    padding: 0px;
-    font-weight: bold;
-}
-.choiсe_year{
-    padding-top: 5px;
-    font-size: 25px;
-}
-.choiсe_year:hover{
-    color: #773921b2;
-    cursor: pointer;
-}
-.selected_month{
-
-    padding-top: 5px;
-    font-size: 25px;
-    cursor: pointer;
-    position: relative;
-    }
-.selected_month::before{
-      content: "";
-  position: absolute;
-  left: 70px;
-  bottom: 1px;
-  width: 150px;
-  height: 14px;
-  transform: skew(-12deg) translateX(-50%);
-  background: #34310b4a;
-  z-index: -1;
-    }
-.choice_day{
-
-    color:#773921;
-    font-weight: bold;
-    padding: 5px;
-    font-size: 25px;
-}
-.choice_day:hover{
-    color: #773921b2;
-    cursor: pointer;
-}
-.selected_day{
-
-    color:#773921;
-    font-weight: bold;
-    padding: 5px;
-    font-size: 25px;
-    cursor: pointer;
-    position: relative;
-    }
-.selected_day::before{
-      content: "";
-  position: absolute;
-  left: 13px;
-  bottom: 1px;
-  width: 20px;
-  height: 5px;
-  transform: skew(-12deg) translateX(-50%);
-  background: #34310b4a;
-  z-index: -1;
-    }
-.search_day{
-    margin-top: 40px;
-    display: inline-block;
-    text-decoration: none;
-    background-color: #773921;
-    color: #f8f0dc;
-    border: 0px solid #773921;
-    border-radius: 14px;
-    font-size: 16px;
-    padding: 7px 16px;
-    transition: all 0.8s ease;
-}
-.search_day:hover{
-    text-decoration: none;
-    background-color: #773921b2;
-    color: #ffeded;
-    border-color: #773921b2;
-    cursor: pointer;
-}
-.add_task{
-    margin: 5.5px;
-    display: inline-block;
-    text-decoration: none;
-    background-color: #773921;
-    color: #f8f0dc;
-    border: 0px solid #773921;
-    border-radius: 14px;
-    font-size: 16px;
-    padding: 7px 16px;
-    transition: all 0.8s ease;
-}
-.add_task:hover{
-    text-decoration: none;
-    background-color: #773921b2;
-    color: #ffeded;
-    border-color: #773921b2;
-    cursor: pointer
-}
-a.logaut:active, /* активная/посещенная ссылка */
- /* при наведении */
-a.logaut {
-  text-decoration: none;
-  color: #773921;
-}
-a.logaut:hover{
-    color: #773921b2;
-}
-</style>
 <script>
     months = {
         '1': 'Января',
@@ -213,6 +94,11 @@ a.logaut:hover{
         '11': 'Ноября',
         '12': 'Декабря',
     }
+    const status_view = {
+        0 :{"text": "Ожидание", "color": "#f2bd00"},
+        1 :{"text": "Выполнено", "color": "#1dce00"},
+        2 :{"text": "Отменено", "color": "#d53c1a"}
+    }
     window.localStorage.setItem('choice_year', 1)
     if (window.localStorage.getItem('year') == null){
         year = 2023}
@@ -225,13 +111,11 @@ a.logaut:hover{
         year = Number(year) + 1
         window.localStorage.setItem('year', year)
         root_year.innerHTML = `Год: ${year}`
-        console.log(year)
     }
     function minus_year(target){
         year = Number(year) - 1
         window.localStorage.setItem('year', year)
         root_year.innerHTML = `Год: ${year}`
-        console.log(year)
     }
     function set_month(target){
         root_month = document.getElementById('select_month')
@@ -301,12 +185,13 @@ a.logaut:hover{
 
     }
 
-
     function search_day(){
+        document.getElementById('tasks').innerHTML = ''
         window.localStorage.setItem('selected_day', day)
         window.localStorage.setItem('selected_month', month)
         window.localStorage.setItem('selected_year', year)
         render_date()
+        render_given_task()
     }
 
     function render_date(){
@@ -316,7 +201,189 @@ a.logaut:hover{
                                                                ${window.localStorage.getItem('selected_year')} года</p>`
 
     }
-    render_date()
+    if (get_month_name = months[window.localStorage.getItem('selected_month')]){
+    render_date()}
+
+    function add_shedule(target){
+        document.getElementById('form').innerHTML = `
+                <div class="form_add_shedule">
+                    <div class="add_inside">
+
+                        <form name="task_add" id="task_add">
+                            <label>Время: </label>
+                            <input id="time" type="time" name="time" placeholder="Врямя" class="input"><br><br>
+                            <label>Статус: </label>
+                            <select id="status" type="" name="status"  class="input">
+                                <option value="0" style="background-color: #f2bd00">Ожидание</option>
+                                <option value="1" style="background-color: #1dce00">Выполнено</option>
+                                <option value="2" style="background-color: #d53c1a">Отменено</option>
+                            </select><br><br>
+                            <label>Приоритет: </label>
+                            <input id="priority" type="text" name="priority" class="input" maxlength="15"><br><br>
+                            <label>Цвет приоритета: </label>
+                            <input id="color_priority" type="color" name="color_priority" placeholder="Ожидает" class="input"><br><br>
+                            <label>Описание задачи: </label><br>
+                            <textarea class="input" id="title" name="title" rows="20" cols="40" placeholder="Описание задачи..."></textarea>
+                            <div class="but1"><button type="button" class="myButton2" onclick="add_new_task(event)">Отправить</button></div>
+                        </form>
+                        <div class="button_close" onclick="close_form(event)"><img class="close_img" src="/static/img/close.jpg"url(/static/img/close.jpg) alt=""></div>
+                    </div>
+
+                </div>`
+    }
+    function close_form(target){
+        document.getElementById('form').innerHTML = ''
+    }
+    function add_new_task(target){
+        const access_token = document.cookie.match(/access-token=(.+?)(;|$)/)
+        const year = window.localStorage.getItem('selected_year')
+        const month = window.localStorage.getItem('selected_month')
+        const day = window.localStorage.getItem('selected_day')
+        var formData = document.getElementById('task_add')
+        const time = formData.querySelector('[name="time"]').value
+        const status = formData.querySelector('[name="status"]').value
+        const priority = formData.querySelector('[name="priority"]').value
+        const color_priority = formData.querySelector('[name="color_priority"]').value
+        const title = formData.querySelector('[name="title"]').value
+        const date = `${year}-${month}-${day}`
+
+        data = {
+            "time": time,
+            "title": title,
+            "status": status,
+            "priority": priority,
+            "color_priority": color_priority,
+            "date": date
+        }
+        fetch(`/todo/task`, {
+            method: 'POST',
+            headers:{'Content-Type': 'application/json', 'access-token': access_token[1]},
+            body: JSON.stringify(data)
+        }).then((response)=>{
+            console.log(response)
+            render_given_task()
+        })
+        close_form()
+
+    }
+    function render_given_task(){
+        const access_token = document.cookie.match(/access-token=(.+?)(;|$)/)
+        let year = window.localStorage.getItem('selected_year')
+        let month = window.localStorage.getItem('selected_month')
+        let day = window.localStorage.getItem('selected_day')
+        fetch(`/todo/shedule/?get_date=${year}-${month}-${day}`, {
+            headers:{
+                'access-token': access_token[1]
+            }})
+            .then((response)=>response.json()).then((shedule)=>{
+            if (shedule.success){
+                render = ''
+                for (i in shedule.tasks){
+                    render += `
+                    <div class="render_task">
+                        <p class="time_task">${shedule.tasks[i].time}</p>
+                        <p class="title_task">${shedule.tasks[i].title}</p>
+                        <div class="status_priority_edit">
+                            <div class="status_priority">
+                                <div style="background-color: ${shedule.tasks[i].color_priority}" class="task_priority">
+                                 <p class="p_priority">${shedule.tasks[i].priority}</p>
+                                </div>
+                                <div style="background-color: ${status_view[shedule.tasks[i].status].color}" class="task_status">
+                                    <p class="p_status">${status_view[shedule.tasks[i].status].text}</p>
+                                </div>
+                            </div>
+                            <div  class="edit"><p id="${shedule.tasks[i].id}" class="p_edit" onclick="edit_shedule(${shedule.tasks[i].id})">Редактировать</p></div>
+                        </div>
+                    </div>
+                    `
+                }
+                document.getElementById('tasks').innerHTML = render
+
+            }
+        })
+
+    }
+        function edit_shedule(target){
+        const task_id = target
+        const access_token = document.cookie.match(/access-token=(.+?)(;|$)/)
+        fetch(`/todo/task/${task_id}`, {headers: {'access-token': access_token[1]}})
+            .then((response)=>response.json()).then((task)=>{
+            render_form = `
+                <div class="form_add_shedule">
+                    <div class="add_inside">
+
+                        <form name="task_add" id="task_edit">
+                            <label>Время: </label>
+                            <input id="time" type="time" name="time" placeholder="Врямя" class="input" value="${task.time}"><br><br>
+                            <label>Статус: </label>
+                            <select id="status" type="" name="status" class="input">`
+                            if (task.status === 0){
+                             render_form +=   `<option value="0" style="background-color: #f2bd00" selected=true>Ожидание</option>
+                                                <option value="1" style="background-color: #1dce00" >Выполнено</option>
+                                                <option value="2" style="background-color: #d53c1a">Отменено</option>`}
+                            if (task.status === 1){
+                             render_form +=   `<option value="0" style="background-color: #f2bd00">Ожидание</option>
+                                                <option value="1" style="background-color: #1dce00" selected=true>Выполнено</option>
+                                                <option value="2" style="background-color: #d53c1a">Отменено</option>`}
+                            if (task.status === 2){
+                             render_form +=   `<option value="0" style="background-color: #f2bd00">Ожидание</option>
+                                                <option value="1" style="background-color: #1dce00">Выполнено</option>
+                                                <option value="2" style="background-color: #d53c1a" selected=true>Отменено</option>`}
+
+                            render_form += `</select><br><br>
+                                            <label>Приоритет: </label>
+                                            <input id="priority" type="text" name="priority" class="input" maxlength="15" value="${task.priority}"><br><br>
+                                            <label>Цвет приоритета: </label>
+                                            <input id="color_priority" type="color" name="color_priority" placeholder="Ожидает" class="input" value="${task.color_priority}"><br><br>
+                                            <label>Описание задачи: </label><br>
+                                            <textarea class="input" id="title" name="title" rows="20" cols="40">${task.title}</textarea>
+                                            <div class="buttons_edit_form">
+                                                <button type="button" class="myButton2" onclick="edit_task(${task_id})">Отправить</button>
+                                                <button type="button" class="myButton3" onclick="delete_task(${task_id})">Удалить</button>
+                                            </div>
+                                        </form>
+                                        <div class="button_close" onclick="close_form(event)"><img class="close_img" src="/static/img/close.jpg"url(/static/img/close.jpg) alt=""></div>
+                                    </div>
+
+                                </div>`
+        document.getElementById('form').innerHTML = render_form
+        })
+
+    }
+    function edit_task(task_id){
+        const access_token = document.cookie.match(/access-token=(.+?)(;|$)/)
+        var formData = document.getElementById('task_edit')
+        const time = formData.querySelector('[name="time"]').value
+        const status = formData.querySelector('[name="status"]').value
+        const priority = formData.querySelector('[name="priority"]').value
+        const color_priority = formData.querySelector('[name="color_priority"]').value
+        const title = formData.querySelector('[name="title"]').value
+
+        data = {
+            "time": time,
+            "title": title,
+            "status": status,
+            "priority": priority,
+            "color_priority": color_priority
+        }
+        console.log(data)
+        fetch(`/todo/task/${task_id}`, {
+            method: 'PATCH',
+            headers:{'Content-Type': 'application/json', 'access-token': access_token[1]},
+            body: JSON.stringify(data)
+        }).then((response)=>{
+            console.log(response)
+            render_given_task()
+            close_form()
+        })
+    }
+    function delete_task(task_id){
+        const access_token = document.cookie.match(/access-token=(.+?)(;|$)/)
+        fetch(`/todo/task/${task_id}`, {headers: {'access-token': access_token[1]}, method: "DELETE"}).then((response)=>{render_given_task()})
+        close_form()
+    }
+    render_given_task()
+
 
 </script>
 </html>

@@ -14,7 +14,7 @@
 			<input name="surname" type="text" placeholder="Фамилия" />
 			<input name="email" type="email" placeholder="Email" autocomplete="off"/>
 			<input name="password" type="password" placeholder="Пароль" autocomplete="off"/>
-			<p style="color: red">{{ error }}</p>
+			<p style="color: red">{{ error_registration }}</p>
 			<button>Зарегестрировать</button>
 		</form>
 	</div>
@@ -24,7 +24,6 @@
 			<input name="email" type="email" placeholder="Email" value="{{ email }}" required/>
 			<input name="password" type="password" placeholder="Password" value="" required/>
 			<p style="color: red">{{ error }}</p>
-<!--			<a href="#">Забыли пароль?</a>-->
 			<button>Войти</button>
 		</form>
 	</div>
@@ -43,8 +42,6 @@
 		</div>
 	</div>
 </div>
-
-
 </body>
 <style>
   @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
@@ -300,7 +297,7 @@ footer a {
 }
 </style>
 <script>
-  const signUpButton = document.getElementById('signUp');
+const signUpButton = document.getElementById('signUp');
 const signInButton = document.getElementById('signIn');
 const container = document.getElementById('container');
 
@@ -311,5 +308,10 @@ signUpButton.addEventListener('click', () => {
 signInButton.addEventListener('click', () => {
 	container.classList.remove("right-panel-active");
 });
+const error = '{{ error_registration }}'
+if (error){
+	container.classList.add("right-panel-active")
+}
+
 </script>
 </html>
