@@ -12,6 +12,7 @@ from src.todo.router import to_do_router
 from src.auth.router import auth_router
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
+from src.config import HOST
 
 
 dotenv.load_dotenv()
@@ -38,7 +39,7 @@ async def index(request: Request):
         if status.get('status') == False:
             return templates.TemplateResponse('get_password.html', context={'request': request})
         else:
-            return templates.TemplateResponse('index.html', context={'request': request})
+            return templates.TemplateResponse('index.html', context={'request': request, 'HOST': HOST})
     except:
         return templates.TemplateResponse('login.html', context={'request': request})
 
