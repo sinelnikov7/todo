@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-<!--    <link href="{{ url_for('static', path='css/index.css') }}" rel="stylesheet">-->
     <link href="{{ HOST }}static/css/index.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/favicon.png"/>
 </head>
 
 
@@ -15,7 +15,7 @@
         <h1 style="margin: 0px; padding-left: 10px; color: #773921">My tasks</h1>
     </div>
     <div>
-        <h1 style="margin: 0px; padding-right: 10px; color: #773921"><a href="/auth/logaut" class="logaut">Выход</a></h1>
+        <h1 style="margin: 0px; padding-right: 10px; color: #773921"><a href="{{ HOST }}auth/logaut" class="logaut">Выход</a></h1>
     </div>
 </div>
 <div style="background-color: #773921; min-width: 1214px; height: 2px"></div>
@@ -53,7 +53,7 @@
 
     <div style="width: 55%; min-width: 600px">
         <div id="button_shedule" style="display: flex; justify-content: center; text-align: center; height: 43px">
-            <button class="add_shedule" onclick="add_shedule(event)">Добавить</button>
+            <p style="padding-top: 10px">Выберите дату</p>
         </div>
         <div style="background-color: #773921; width: 100%; height: 2px"></div>
         <div style="display: flex; justify-content: center; text-align: center">
@@ -182,12 +182,13 @@
                                         ${item}
                                 </div>`}
         })
-        document.getElementById('search_day').innerHTML += `<button class="search_day" onclick="search_day()">Найти</button>`
+        document.getElementById('search_day').innerHTML += `<button class="search_day" onclick="search_day()">Выбрать дату</button>`
 
     }
 
     function search_day(){
         document.getElementById('tasks').innerHTML = ''
+        document.getElementById('button_shedule').innerHTML = '<button class="add_shedule" onclick="add_shedule(event)">Добавить</button>'
         window.localStorage.setItem('selected_day', day)
         window.localStorage.setItem('selected_month', month)
         window.localStorage.setItem('selected_year', year)
@@ -197,6 +198,7 @@
 
     function render_date(){
         get_month_name = months[window.localStorage.getItem('selected_month')]
+        document.getElementById('button_shedule').innerHTML = '<button class="add_shedule" onclick="add_shedule(event)">Добавить</button>'
         document.getElementById('render_date').innerHTML = `<p>${window.localStorage.getItem('selected_day')}
                                                                ${get_month_name}
                                                                ${window.localStorage.getItem('selected_year')} года</p>`
