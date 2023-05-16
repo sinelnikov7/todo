@@ -15,6 +15,8 @@ from passlib.context import CryptContext
 
 from worker import send_code
 
+from src.config import HOST
+
 dotenv.load_dotenv()
 SECRET = os.environ.get('SECRET')
 EMAIL_SENDER = os.environ.get('EMAIL_SENDER')
@@ -60,7 +62,7 @@ async def login(request: Request, email = Form(), password = Form(), session: As
         user = result.fetchone()[0]
         if pwd_context.verify(password, user.password):
             token = jwt.encode({"user_id": user.id, "status": user.activate}, SECRET, algorithm="HS256")
-            template_response = RedirectResponse('http://127.0.0.1:8000', status_code=301)
+            template_response = RedirectResponse(HOST, status_code=301)
             template_response.set_cookie(key='access-token', value=token)
             return template_response
         else:
@@ -95,7 +97,7 @@ async def get_password(request: Request, key = Form(), session: AsyncSession = D
         await session.execute(query)
         await session.commit()
         token = jwt.encode({"user_id": user_id, "status": True}, SECRET, algorithm="HS256")
-        template_response = RedirectResponse('/', status_code=301)
+        template_response = RedirectResponse(HOST, status_code=301)
         template_response.set_cookie(key="access-token", value=token)
         return template_response
     else:
