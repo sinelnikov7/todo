@@ -120,8 +120,6 @@ async def get_task(id:int = id,  access_token: Annotated[str | None, Header()] =
             response.success =True
         else:
             return {"status": "У вас нету доступа к этой задаче"}
-        print(response)
-        print(id)
     except (IntegrityError, IndexError, TypeError):
         return {"status": f"Не удалось найти задачу с id={id}"}
     return response
