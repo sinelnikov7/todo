@@ -1,28 +1,21 @@
 import random
+import os
+
+import jwt
+import dotenv
 from fastapi import Request, Depends, Form, APIRouter
 from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
-import jwt
-import dotenv
-import os
-from src.database import get_session
-from .models import User, Code
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.responses import RedirectResponse
 from passlib.context import CryptContext
 
+from src.database import get_session
+from .models import User, Code
 from worker import send_code
-
 from src.config import HOST
-
-dotenv.load_dotenv()
-SECRET = os.environ.get('SECRET')
-EMAIL_SENDER = os.environ.get('EMAIL_SENDER')
-EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 auth_router = APIRouter(
@@ -30,6 +23,11 @@ auth_router = APIRouter(
     tags=["Auth"]
 )
 
+dotenv.load_dotenv()
+SECRET = os.environ.get('SECRET')
+EMAIL_SENDER = os.environ.get('EMAIL_SENDER')
+EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 templates = Jinja2Templates(directory="src/templates/")
 
 @auth_router.post("/registration", response_class=HTMLResponse)
@@ -53,7 +51,6 @@ async def registration(request: Request, name = Form(), surname = Form(),
     except IntegrityError:
         return templates.TemplateResponse('login.html', context={'request': request, 'error_registration': 'Пользователь с таким email уже зарегестрирован'})
 
-
 @auth_router.post("/login", response_class=HTMLResponse)
 async def login(request: Request, email = Form(), password = Form(), session: AsyncSession = Depends(get_session)):
     try:
@@ -76,8 +73,6 @@ async def login(request: Request, email = Form(), password = Form(), session: As
         }
         return templates.TemplateResponse('login.html', context=context)
 
-
-
 @auth_router.post("/get_password", response_class=HTMLResponse)
 async def get_password(request: Request, key = Form(), session: AsyncSession = Depends(get_session)):
     try:
@@ -93,7 +88,6 @@ async def get_password(request: Request, key = Form(), session: AsyncSession = D
     result_key = result.fetchone()[0]
     if result_key == key:
         query = update(User).where(User.id == user_id).values(activate = True)
-        # query = User.update().values(activate=True).where(User.id == user_id)
         await session.execute(query)
         await session.commit()
         token = jwt.encode({"user_id": user_id, "status": True}, SECRET, algorithm="HS256")
@@ -103,23 +97,9 @@ async def get_password(request: Request, key = Form(), session: AsyncSession = D
     else:
         return templates.TemplateResponse('get_password.html', context={'request': request, "error": "Не правильный код"})
 
-@auth_router.get("/logaut", response_class=HTMLResponse)
+@auth_router.get("/logout", response_class=HTMLResponse)
 async def login(request: Request):
     template_response = templates.TemplateResponse('login.html', context={"request": request})
     template_response.delete_cookie(key='access-token')
     return template_response
 
-@auth_router.get('/qqq')
-async def qqq(session: AsyncSession = Depends(get_session)):
-    # query = select(User).options(selectinload(User.code)).where(User.id == 1)
-    # result = await session.execute(query)
-    # result = result.fetchone()[0]
-    # print(result.code.key)
-    #
-    # query = select(Code).options(selectinload(Code.user)).where(Code.id == 1)
-    # result = await session.execute(query)
-    # result = result.fetchone()[0]
-    # print(result.user.name)
-    # result = send_code.delay(4, 4)
-    # print(result, '!!!!!!!!!!!!!!!!!!!')
-    return {"status":"200"}

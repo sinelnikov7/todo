@@ -1,12 +1,10 @@
-# from datetime import date, time
 import datetime
-from typing import Optional, Union, List, Dict
 
+from typing import Optional, Union, List, Dict
 from pydantic import BaseModel, Field, EmailStr, validator
 
 
 class TaskPost(BaseModel):
-
 
     time: datetime.time = Field(..., title="Time", description="Time of day", example="08:00")
     title: str
@@ -85,13 +83,11 @@ class SheduleResponseWithTasks(BaseModel):
 
 class TaskEdit(BaseModel):
 
-
     time: datetime.time = Field(..., title="Time", description="Time of day", example="08:00")
     title: str
     status: int
     priority: str
     color_priority: str
-
 
     @validator('status')
     def status_range(cls, value):
@@ -104,6 +100,7 @@ class TaskEdit(BaseModel):
         if len(value) < 0 or len(value) > 15:
             raise ValueError('Приоритет должен содержать 0т 1 до 15 символов')
         return value
+
 
 class TaskDelete(BaseModel):
     staus: Dict = {"status": 200}

@@ -1,10 +1,10 @@
+import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 import dotenv
 from celery import Celery
-import os
 
 celery = Celery('server', broker='redis://127.0.0.1:6379')
 dotenv.load_dotenv()

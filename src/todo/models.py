@@ -1,11 +1,7 @@
-from sqlalchemy import Column, INTEGER, String, MetaData, Boolean, ForeignKey, DATE, TEXT, UniqueConstraint, TIME
+from sqlalchemy import Column, INTEGER, String, ForeignKey, DATE, TEXT, UniqueConstraint, TIME
 from sqlalchemy.orm import relationship
+
 from src.database import Base
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import mapper, relationship
-from src.auth.models import Base
-
-
 
 
 class Shedule(Base):
@@ -16,6 +12,7 @@ class Shedule(Base):
     user = relationship('User', back_populates='shedule')
     task = relationship('Task', back_populates='shedule', uselist=True)
     __table_args__ = (UniqueConstraint('date', 'user_id'),)
+
 
 class Task(Base):
     __tablename__ = 'task'

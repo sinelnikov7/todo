@@ -1,21 +1,20 @@
-import asyncio
 import os
-import time
-from typing import Union, Annotated, Dict
-from fastapi import APIRouter, Depends, Request, Response, Header, HTTPException
-from jwt import DecodeError
-from sqlalchemy import insert, select, and_, update, delete
+from datetime import date
+
 import jwt
 import dotenv
+from jwt import DecodeError
+from typing import Union, Annotated
+from fastapi import APIRouter, Depends, Header, HTTPException
+from sqlalchemy import select, and_, update, delete
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import selectinload
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from .schemas import SheduleSchemaGet, SheduleSchemaPost, TaskGet, SheduleResponse, TaskPost, SheduleResponseWithTasks, \
     TaskGetForShedule, TaskGetOne, TaskEdit, TaskDelete
 from .models import Shedule, Task
 from src.database import get_session
-from sqlalchemy.ext.asyncio import AsyncSession
-from datetime import date
 
 to_do_router = APIRouter(
     prefix="/todo",
@@ -84,10 +83,8 @@ async def get_shedule(get_date: date, access_token: Annotated[str | None, Header
     response = {"success": True, "id": shedule.id, "date": shedule.date, "tasks": response_tasks}
     return response
 
-
 @to_do_router.post('/shedule', status_code=201)
 async def add_shedule(shedule: SheduleSchemaPost, access_token: Annotated[str | None, Header()] = None, session:AsyncSession = Depends(get_session)) -> Union[SheduleResponse, dict]:
-
     try:
         token = access_token
         user_id = jwt.decode(token, SECRET, algorithms=['HS256']).get("user_id")
@@ -102,7 +99,6 @@ async def add_shedule(shedule: SheduleSchemaPost, access_token: Annotated[str | 
         return {"status": "201", "data": response}
     except IntegrityError:
         return {"status": "У пользователя уже есть расписание на эту дату"}
-
 
 @to_do_router.get('/task/{id}')
 async def get_task(id:int = id,  access_token: Annotated[str | None, Header()] = None, session: AsyncSession = Depends(get_session)) -> Union[TaskGetOne, dict]:
