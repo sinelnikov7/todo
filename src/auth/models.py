@@ -13,7 +13,7 @@ class User(Base):
     name = Column(String(50), nullable=False)
     surname = Column(String(50), nullable=False)
     activate = Column(Boolean, default=False)
-    data_create = Column(Date, nullable=True, default=False)
+    data_create = Column(Date, nullable=True, default=None)
     code = relationship('Code', back_populates="user", uselist=False)
     shedule = relationship('Shedule', back_populates="user")
 
