@@ -49,7 +49,7 @@ async def registration(request: Request, name = Form(), surname = Form(),
         token = jwt.encode({"user_id": user.id, "status": False}, SECRET, algorithm="HS256")
         template_response = templates.TemplateResponse('get_password.html', context={'request': request})
         template_response.set_cookie(key='access-token', value=token)
-        send_code.delay(email, name, surname, password, number)
+        send_code(email, name, surname, password, number)
         return template_response
     except IntegrityError:
         return templates.TemplateResponse('login.html', context={'request': request, 'error_registration': 'Пользователь с таким email уже зарегестрирован'})

@@ -13,7 +13,7 @@ EMAIL_SENDER = os.environ.get('EMAIL_SENDER')
 EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 
 # Отправка кода на почту при регистрации
-@celery.task
+#@celery.task
 def send_code(email, name, surname, password, number):
     email_sender = EMAIL_SENDER
     email_password = EMAIL_PASSWORD
