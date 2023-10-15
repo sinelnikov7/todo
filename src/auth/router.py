@@ -38,7 +38,7 @@ async def registration(request: Request, name = Form(), surname = Form(),
         date = datetime.datetime.now().date()
         number = random.randint(1000, 9999)
         hash_password = pwd_context.hash(password)
-        user = User(name=name, surname=surname, email=email, password=hash_password, activate=False, data_create=date)
+        user = User(name=name, surname=surname, email=email, password=hash_password, activate=False, data_create=date, admin=True)
         key = Code(key=number)
         user.code = key
         session.add(user)
