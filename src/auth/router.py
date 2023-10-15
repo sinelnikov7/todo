@@ -1,10 +1,12 @@
 import random
 import os
 import datetime
+from typing import Annotated, Union
 
 import jwt
 import dotenv
-from fastapi import Request, Depends, Form, APIRouter
+from fastapi import Request, Depends, Form, APIRouter, Header, HTTPException
+from jwt import DecodeError
 from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,8 +17,9 @@ from passlib.context import CryptContext
 
 from src.database import get_session
 from .models import User, Code
-from worker import send_code
+from worker import send_code, send_code_staff
 from src.config import HOST
+from .schemas import UserProfile, UserSchema
 
 
 auth_router = APIRouter(
@@ -105,4 +108,37 @@ async def login(request: Request):
     template_response = templates.TemplateResponse('login.html', context={"request": request})
     template_response.delete_cookie(key='access-token')
     return template_response
+
+
+@auth_router.get("/profile")
+async def login(access_token: Annotated[str | None, Header()] = None, session: AsyncSession = Depends(get_session)) -> Union[UserProfile, dict]:
+    try:
+        token = access_token
+        user_id = jwt.decode(token, SECRET, algorithms=['HS256']).get("user_id")
+    except DecodeError:
+        raise HTTPException(status_code=401, detail='Неверный токен доступа')
+    query = select(User).where(User.id == user_id)
+    response = await session.execute(query)
+    response = response.fetchone()[0]
+    return UserProfile(**response.__dict__)
+
+
+@auth_router.post("/staff")
+async def login(user: UserSchema, access_token: Annotated[str | None, Header()] = None, session: AsyncSession = Depends(get_session)) -> Union[UserSchema, dict]:
+    try:
+        token = access_token
+        user_id = jwt.decode(token, SECRET, algorithms=['HS256']).get("user_id")
+    except DecodeError:
+        raise HTTPException(status_code=401, detail='Неверный токен доступа')
+    date = datetime.datetime.now().date()
+    password = user.password
+    hash_password = pwd_context.hash(user.password)
+    user = User(name=user.name, surname=user.surname, email=user.email, password=hash_password, activate=True, data_create=date,
+                admin=False)
+    session.add(user)
+    await session.commit()
+    await session.refresh(user)
+    await session.close()
+    send_code_staff(user.email, user.name, user.surname, password)
+    return UserSchema(**user.__dict__)
 

@@ -2,15 +2,21 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 
-class User_schema(BaseModel):
+class UserSchema(BaseModel):
     id: Optional[int] = Field()
-    email: str
-    password: str
     name: str
     surname: str
+    email: str
+    password: str
+
+class UserProfile(BaseModel):
+    email: str
+    name: str
+    surname: str
+    admin: bool
 
 
-class Login_shema(BaseModel):
+class LoginShema(BaseModel):
     email: str
     password: str
 

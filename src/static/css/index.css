@@ -137,6 +137,7 @@ a.logaut:active, /* активная/посещенная ссылка */
 a.logaut {
   text-decoration: none;
   color: #773921;
+    cursor: pointer;
 }
 a.logaut:hover{
     color: #773921b2;
@@ -236,6 +237,12 @@ a.logaut:hover{
 .button_close {
   position: absolute;
   bottom: 94%;
+  left: 91%;
+}
+
+.button_close_staff {
+  position: absolute;
+  bottom: 90%;
   left: 91%;
 }
 

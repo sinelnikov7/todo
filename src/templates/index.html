@@ -12,7 +12,7 @@
 <!--<body style="margin: 0px; padding: 0px; background-color: #ffbf6e; background: url(https://catherineasquithgallery.com/uploads/posts/2021-02/1613019197_184-p-abstraktsiya-na-oranzhevom-fone-206.jpg) no-repeat; height: 100%">-->
 <div style="display: flex; justify-content: space-between" id="header" class="header">
     <div>
-        <h1 style="margin: 0px; padding-left: 10px; color: #773921">My tasks</h1>
+        <h1 style="margin: 0px; padding-left: 10px; color: #773921"><a href="{{ HOST }}" class="logaut">Задачи</a><a class="logaut" id="staff" onclick="get_staff(event)"></a></h1>
     </div>
     <div>
         <h1 style="margin: 0px; padding-right: 10px; color: #773921"><a href="{{ HOST }}auth/logout" class="logaut">Выход</a></h1>
@@ -67,6 +67,7 @@
 
     <div style="padding-left: 10px; min-width: 300px">
         <p>В разработке:</p>
+        <p>- Добавление задач подчиненным сотрудникам</p>
         <p>- Сортировка задач по приоритету</p>
         <p>- Фильтр по статусу</p>
         <p>- Настройка уведомлени в телеграм и на почту</p>
@@ -78,6 +79,8 @@
 </div>
 <div style="background-color: #773921; min-width: 1214px; height: 2px"></div>
 <div id="form"></div>
+<div id="form_add_staff"></div>
+
 <div class="footer" id="foter"><p style="color: black; font-size: 20px; padding: 10px">Email: sinelnikovby@gmail.com Telegram: @sinelnikovby</p></div>
 </body>
 <script>
@@ -237,6 +240,9 @@
     function close_form(target){
         document.getElementById('form').innerHTML = ''
     }
+    function close_staff_form(target){
+        document.getElementById('form_add_staff').innerHTML = ''
+    }
     function add_new_task(target){
         const access_token = document.cookie.match(/access-token=(.+?)(;|$)/)
         const year = window.localStorage.getItem('selected_year')
@@ -387,6 +393,67 @@
     }
     render_given_task()
 
+    function get_user_profile() {
+        const access_token = document.cookie.match(/access-token=(.+?)(;|$)/)
+        fetch(`/auth/profile`, {headers:{'access-token': access_token[1]}})
+            .then((response)=>response.json()).then((user)=>{
+            if (user.admin){
+                document.getElementById('staff').innerHTML  = " Сотрудники"
+            }
+        })
+    }
+    get_user_profile()
+    function get_staff(target){
+        document.getElementById('form_add_staff').innerHTML = `
+                <div class="form_add_shedule">
+                    <div class="add_inside">
 
+                        <form name="staff_add" id="staff_add">
+                            <label>Добавить нового сотрудника: </label><br><br>
+
+                            <label>Имя: </label>
+                            <input id="name" type="text" name="name" placeholder="Имя" class="input"><br><br>
+
+                            <label>Фамилия: </label>
+                            <input id="surname" type="text" name="surname" placeholder="Фамилия" class="input"><br><br>
+
+                            <label>Email: </label>
+                            <input id="email" type="email" name="email" placeholder="Email" class="input"><br><br>
+
+                            <label>Пароль: </label>
+                            <input id="password" type="text" name="password" placeholder="Пароль" class="input"><br><br>
+                            <div class="but1"><button type="button" class="myButton2" onclick="add_new_staff(event)">Отправить</button></div>
+                        </form>
+                        <div class="button_close_staff" onclick="close_staff_form(event)"><img class="close_img" src="/static/img/close.jpg"url(/static/img/close.jpg) alt=""></div>
+                    </div>
+
+                </div>`
+    }
+
+        function add_new_staff(target){
+        const access_token = document.cookie.match(/access-token=(.+?)(;|$)/)
+        var formData = document.getElementById('staff_add')
+        const name = formData.querySelector('[name="name"]').value
+        const surname = formData.querySelector('[name="surname"]').value
+        const email = formData.querySelector('[name="email"]').value
+        const password = formData.querySelector('[name="password"]').value
+
+
+        data = {
+            "name": name,
+            "surname": surname,
+            "email": email,
+            "password": password,
+        }
+        fetch(`/auth/staff`, {
+            method: 'POST',
+            headers:{'Content-Type': 'application/json', 'access-token': access_token[1]},
+            body: JSON.stringify(data)
+        }).then((response)=>response.json()).then((user=>{
+            console.log(user)
+        }))
+        close_staff_form()
+
+    }
 </script>
 </html>

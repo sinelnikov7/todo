@@ -10,7 +10,7 @@ import jwt
 import dotenv
 
 from src.database import async_session
-from src.auth.schemas import User_schema
+from src.auth.schemas import UserSchema
 from src.auth.models import User
 from src.todo.router import to_do_router
 from src.auth.router import auth_router
