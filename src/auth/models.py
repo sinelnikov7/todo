@@ -1,4 +1,6 @@
-from sqlalchemy import Column, INTEGER, String, Boolean, ForeignKey
+import datetime
+
+from sqlalchemy import Column, INTEGER, String, Boolean, ForeignKey, Date
 from sqlalchemy.orm import  relationship
 
 from src.database import Base
@@ -11,6 +13,7 @@ class User(Base):
     name = Column(String(50), nullable=False)
     surname = Column(String(50), nullable=False)
     activate = Column(Boolean, default=False)
+    data_create = Column(Date, nullable=True, default=False)
     code = relationship('Code', back_populates="user", uselist=False)
     shedule = relationship('Shedule', back_populates="user")
 

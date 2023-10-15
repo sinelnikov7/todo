@@ -1,5 +1,6 @@
 import random
 import os
+import datetime
 
 import jwt
 import dotenv
@@ -34,12 +35,14 @@ templates = Jinja2Templates(directory="src/templates/")
 async def registration(request: Request, name = Form(), surname = Form(),
                        email = Form(), password = Form(), session: AsyncSession = Depends(get_session)):
     try:
+        date = datetime.datetime.now().date()
         number = random.randint(1000, 9999)
         hash_password = pwd_context.hash(password)
-        user = User(name=name, surname=surname, email=email, password=hash_password, activate=False)
+        user = User(name=name, surname=surname, email=email, password=hash_password, activate=False, data_create=date)
         key = Code(key=number)
         user.code = key
         session.add(user)
+        print(user)
         await session.commit()
         await session.refresh(user)
         await session.close()
