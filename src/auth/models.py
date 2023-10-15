@@ -14,6 +14,7 @@ class User(Base):
     surname = Column(String(50), nullable=False)
     activate = Column(Boolean, default=False)
     data_create = Column(Date, nullable=True, default=None)
+    admin = Column(Boolean, default=False)
     code = relationship('Code', back_populates="user", uselist=False)
     shedule = relationship('Shedule', back_populates="user")
 
