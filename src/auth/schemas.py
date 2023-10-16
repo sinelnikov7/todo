@@ -13,7 +13,7 @@ class UserProfile(BaseModel):
     email: str
     name: str
     surname: str
-    admin: bool
+    is_admin: bool
 
 
 class LoginShema(BaseModel):

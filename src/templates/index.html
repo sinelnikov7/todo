@@ -397,7 +397,7 @@
         const access_token = document.cookie.match(/access-token=(.+?)(;|$)/)
         fetch(`/auth/profile`, {headers:{'access-token': access_token[1]}})
             .then((response)=>response.json()).then((user)=>{
-            if (user.admin){
+            if (user.is_admin){
                 document.getElementById('staff').innerHTML  = " Сотрудники"
             }
         })
