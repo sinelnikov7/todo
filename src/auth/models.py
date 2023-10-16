@@ -14,9 +14,13 @@ class User(Base):
     surname = Column(String(50), nullable=False)
     activate = Column(Boolean, default=False)
     data_create = Column(Date, nullable=True, default=None)
-    admin = Column(Boolean, default=False)
+    is_admin = Column(Boolean, default=False)
     code = relationship('Code', back_populates="user", uselist=False)
     shedule = relationship('Shedule', back_populates="user")
+    admin_id = Column(INTEGER, ForeignKey("user.id"))
+    admin = relationship('User', back_populates='admin_user')
+
+
 
 class Code(Base):
     __tablename__ = 'codes'
@@ -24,3 +28,4 @@ class Code(Base):
     user_id = Column(INTEGER, ForeignKey("users.id"))
     key = Column(INTEGER)
     user = relationship('User', back_populates='code')
+
