@@ -134,7 +134,7 @@ async def login(user: UserSchema, access_token: Annotated[str | None, Header()] 
     password = user.password
     hash_password = pwd_context.hash(user.password)
     user = User(name=user.name, surname=user.surname, email=user.email, password=hash_password, activate=True, data_create=date,
-                admin=False)
+                is_admin=False, admin_id=user_id)
     session.add(user)
     await session.commit()
     await session.refresh(user)
