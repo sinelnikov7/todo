@@ -18,7 +18,7 @@ class User(Base):
     code = relationship('Code', back_populates="user", uselist=False)
     shedule = relationship('Shedule', back_populates="user")
     admin_id = Column(INTEGER, ForeignKey("users.id"))
-    admin = relationship('User', back_populates='users')
+    admin = relationship('User', back_populates='admin')
 
 
 
