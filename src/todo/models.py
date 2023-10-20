@@ -1,4 +1,4 @@
-from sqlalchemy import Column, INTEGER, String, ForeignKey, DATE, TEXT, UniqueConstraint, TIME
+from sqlalchemy import Column, INTEGER, String, ForeignKey, DATE, TEXT, UniqueConstraint, TIME, Boolean
 from sqlalchemy.orm import relationship
 
 from src.database import Base
@@ -22,6 +22,7 @@ class Task(Base):
     status = Column(INTEGER, nullable=False)
     priority = Column(String(15), nullable=False)
     color_priority = Column(String(15), nullable=True, default="#fff")
+    #from_admin = Column(Boolean, default=False)
     shedule_id = Column(INTEGER, ForeignKey("shedule.id"))
     shedule = relationship('Shedule', back_populates='task')
 

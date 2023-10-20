@@ -10,6 +10,7 @@ class UserSchema(BaseModel):
     password: str
 
 class UserProfile(BaseModel):
+    id: int
     email: str
     name: str
     surname: str

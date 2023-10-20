@@ -12,6 +12,7 @@ class TaskPost(BaseModel):
     priority: str
     color_priority: str
     date: datetime.date
+    user_id: Union[int, None]
 
     @validator('status')
     def status_range(cls, value):

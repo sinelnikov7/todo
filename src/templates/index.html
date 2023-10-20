@@ -67,7 +67,7 @@
 
     <div style="padding-left: 10px; min-width: 300px">
         <p>В разработке:</p>
-        <p>- Добавление задач подчиненным сотрудникам</p>
+        <p>- Добавление задач подчиненным сотрудникам - готово</p>
         <p>- Сортировка задач по приоритету</p>
         <p>- Фильтр по статусу</p>
         <p>- Настройка уведомлени в телеграм и на почту</p>
@@ -98,6 +98,9 @@
         '11': 'Ноября',
         '12': 'Декабря',
     }
+    var admin = false
+    window.localStorage.setItem('admin', false)
+    // window.localStorage.setItem('admin', false)
     const status_view = {
         0 :{"text": "Ожидание", "color": "#f2bd00"},
         1 :{"text": "Выполнено", "color": "#1dce00"},
@@ -216,6 +219,7 @@
                     <div class="add_inside">
 
                         <form name="task_add" id="task_add">
+                        <div id="employes"></div>
                             <label>Время: </label>
                             <input id="time" type="time" name="time" placeholder="Врямя" class="input"><br><br>
                             <label>Статус: </label>
@@ -236,6 +240,18 @@
                     </div>
 
                 </div>`
+        if (window.localStorage.getItem('admin') === 'true'){
+            render_staff = ''
+for (i in staff){
+
+                render_staff += `<option value="${staff[i].id}">${staff[i].name} ${staff[i].surname}</option>`
+                }
+            document.getElementById('employes').innerHTML = `<label>Выбрать сотрудника: </label><select id="employee" type="" name="employee">
+
+                            ${render_staff}</select><br><br>`
+        }else {
+            document.getElementById('employes').innerHTML = `<select id="employee" type="" name="employee" hidden="true"></select><br><br>`
+        }
     }
     function close_form(target){
         document.getElementById('form').innerHTML = ''
@@ -244,11 +260,17 @@
         document.getElementById('form_add_staff').innerHTML = ''
     }
     function add_new_task(target){
+        var formData = document.getElementById('task_add')
+         if (window.localStorage.getItem('admin') === 'true'){
+             var user_id = formData.querySelector('[name="employee"]').value
+         }else{
+             var user_id = null
+         }
+
         const access_token = document.cookie.match(/access-token=(.+?)(;|$)/)
         const year = window.localStorage.getItem('selected_year')
         const month = window.localStorage.getItem('selected_month')
         const day = window.localStorage.getItem('selected_day')
-        var formData = document.getElementById('task_add')
         const time = formData.querySelector('[name="time"]').value
         const status = formData.querySelector('[name="status"]').value
         const priority = formData.querySelector('[name="priority"]').value
@@ -262,7 +284,8 @@
             "status": status,
             "priority": priority,
             "color_priority": color_priority,
-            "date": date
+            "date": date,
+            "user_id": user_id
         }
         fetch(`/todo/task`, {
             method: 'POST',
@@ -398,10 +421,24 @@
         fetch(`/auth/profile`, {headers:{'access-token': access_token[1]}})
             .then((response)=>response.json()).then((user)=>{
             if (user.is_admin){
+
                 document.getElementById('staff').innerHTML  = " Сотрудники"
+                window.localStorage.setItem('admin', true)
+
+
             }
         })
     }
+    function get_staff_list() {
+        const access_token = document.cookie.match(/access-token=(.+?)(;|$)/)
+        fetch(`/auth/staff`, {headers:{'access-token': access_token[1]}})
+            .then((response)=>response.json()).then((staff)=>{
+                window.localStorage.setItem('staff', JSON.stringify(staff))
+                console.log(JSON.stringify(staff), '!!!!!!!!')
+        })
+    }
+    get_staff_list()
+
     get_user_profile()
     function get_staff(target){
         document.getElementById('form_add_staff').innerHTML = `
@@ -453,7 +490,33 @@
             console.log(user)
         }))
         close_staff_form()
-
     }
+
+    admin = window.localStorage.getItem('admin')
+    staff = JSON.parse(window.localStorage.getItem('staff'))
+    console.log(staff, '!!!!!!!!!!!!')
+// let globalData;
+// function fetchData() {
+//   return fetch("https://api.macroncrm.ru/partner-vacancy-highlight/list?access-token=47nBG5c_vUHYJxJUpRBWn3F8nU0nYCItb-qWeNhW6zlSGea4U07dXnu-gHYogjhb")
+//     .then(response => {
+//       if (!response.ok) {
+//         throw new Error(`HTTP error! Status: ${response.status}`);
+//       }
+//       return response.json();
+//     })
+//     .then(data => {
+//       globalData = data;
+//       return data;
+//     })
+//     .catch(error => {
+//       console.error('Произошла ошибка при выполнении запроса:', error);
+//     });
+// }
+// fetchData()
+//   .then(data => {
+//     console.log(globalData);
+//       return globalData
+//   });
+//     console.log(globalData)
 </script>
 </html>

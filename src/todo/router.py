@@ -32,6 +32,8 @@ async def add_task(task: TaskPost, access_token: Annotated[str | None, Header()]
         user_id = jwt.decode(token, SECRET, algorithms=['HS256']).get("user_id")
     except DecodeError:
         raise HTTPException(status_code=401, detail='Неверный токен доступа')
+    if task.user_id != None:
+        user_id = task.user_id
     query = select(Shedule).where(and_(Shedule.date == task.date, Shedule.user_id == user_id))
     exist_shedule = await session.execute(query)
     exist_shedule = exist_shedule.fetchone()
@@ -51,7 +53,6 @@ async def add_task(task: TaskPost, access_token: Annotated[str | None, Header()]
         shedule = Shedule(date=task.date, user_id=user_id)
         new_task = Task(time=task.time, title=task.title, status=task.status, priority=task.priority,
                         color_priority=task.color_priority)
-        print(dir(shedule))
         shedule.task.append(new_task)
         session.add(shedule)
         await session.commit()
