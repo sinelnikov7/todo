@@ -18,7 +18,7 @@ from passlib.context import CryptContext
 from src.database import get_session
 from .models import User, Code
 from worker import send_code, send_code_staff
-from src.config import HOST
+from config import HOST
 from .schemas import UserProfile, UserSchema
 
 

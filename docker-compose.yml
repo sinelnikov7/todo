@@ -25,11 +25,17 @@ services:
       PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_DEFAULT_PASSWORD}"
     ports:
       - "5050:80"
-  redis:
-    image: redis
+  rabbitmq_todo:
+    image: rabbitmq:3.8-management
     ports:
-      - "6379:6379"
-    command: redis-server
+      - 5672:5672  # порт для доступа к RabbitMQ
+      - 15672:15672  # порт для доступа к RabbitMQ Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq  # сохранение данных RabbitMQ
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin  # имя пользователя для RabbitMQ
+      - RABBITMQ_DEFAULT_PASS=admin123  # пароль для RabbitMQ
 volumes:
   myapp:
+  rabbitmq_data:
 

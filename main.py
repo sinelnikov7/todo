@@ -1,20 +1,17 @@
 import os
 
 from fastapi.staticfiles import StaticFiles
-from fastapi import FastAPI, Request, Depends,  Response
+from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 import jwt
 import dotenv
 
-from src.database import async_session
-from src.auth.schemas import UserSchema
-from src.auth.models import User
+from infrastructure.database.database import async_session
 from src.todo.router import to_do_router
 from src.auth.router import auth_router
-from src.config import HOST
+from config import HOST
 
 
 dotenv.load_dotenv()

@@ -6,8 +6,8 @@ from sqlalchemy.pool import NullPool
 from typing import AsyncGenerator
 from httpx import AsyncClient
 
-from src.config import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_TEST
-from src.database import metadata,  get_session
+from config import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_TEST
+from infrastructure.database.database import metadata,  get_session
 from main import app
 
 
