@@ -20,4 +20,3 @@ class UserProfile(BaseModel):
 class LoginShema(BaseModel):
     email: str
     password: str
-

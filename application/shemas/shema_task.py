@@ -1,7 +1,7 @@
 import datetime
 
-from typing import Optional, Union, List, Dict
-from pydantic import BaseModel, Field, EmailStr, validator
+from typing import Optional, Union,  Dict
+from pydantic import BaseModel, Field, validator
 
 
 class TaskPost(BaseModel):
@@ -59,28 +59,6 @@ class TaskGetForShedule(BaseModel):
     color_priority: str
 
 
-class SheduleSchemaGet(BaseModel):
-
-    id: Optional[int] = None
-    date: datetime.date
-    user_id: int
-
-
-class SheduleResponse(BaseModel):
-
-    status: str
-    data: SheduleSchemaGet
-
-
-class SheduleSchemaPost(BaseModel):
-
-    date: datetime.date
-
-class SheduleResponseWithTasks(BaseModel):
-    success: bool
-    id: int
-    date: datetime.date
-    tasks: List[TaskGetForShedule]
 
 class TaskEdit(BaseModel):
 
@@ -105,4 +83,3 @@ class TaskEdit(BaseModel):
 
 class TaskDelete(BaseModel):
     staus: Dict = {"status": 200}
-
