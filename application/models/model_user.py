@@ -3,6 +3,7 @@ import datetime
 from sqlalchemy import Column, INTEGER, String, Boolean, ForeignKey, Date
 from sqlalchemy.orm import  relationship
 
+from application.models.model_shedule import Shedule
 from infrastructure.database.database import Base
 
 class User(Base):
