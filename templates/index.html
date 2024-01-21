@@ -241,7 +241,8 @@
 
                 </div>`
         if (window.localStorage.getItem('admin') === 'true'){
-            render_staff = ''
+            user_id = window.localStorage.getItem('user_id')
+            render_staff = `<option value="${user_id}">Установить себе</option>`
     for (i in staff){
 
                 render_staff += `<option value="${staff[i].id}">${staff[i].name} ${staff[i].surname}</option>`
@@ -424,6 +425,7 @@
 
                 document.getElementById('staff').innerHTML  = " Сотрудники"
                 window.localStorage.setItem('admin', true)
+                window.localStorage.setItem('user_id', user.id)
 
 
             }

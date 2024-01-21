@@ -73,5 +73,5 @@ async def task_dellete(id, access_token, session):
         user_id = jwt.decode(token, SECRET, algorithms=['HS256']).get("user_id")
     except DecodeError:
         raise HTTPException(status_code=401, detail='Неверный токен доступа')
-    response = await use_task(id, session)
+    response = await use_task.dellete(id, session)
     return {"status": 200}
