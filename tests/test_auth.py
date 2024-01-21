@@ -1,7 +1,7 @@
 from httpx import AsyncClient
 from sqlalchemy import select
 
-from src.auth.models import User, Code
+from application.models.model_user import User, Code
 from conftest import async_session_maker_test
 
 form_data_register = {

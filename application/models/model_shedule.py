@@ -1,6 +1,6 @@
-from sqlalchemy import Column, INTEGER, ForeignKey, DATE, UniqueConstraint
+from sqlalchemy import DATE, UniqueConstraint
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column, INTEGER, String, ForeignKey, TEXT, TIME
+from sqlalchemy import Column, INTEGER, ForeignKey
 
 from application.models.model_task import Task
 from infrastructure.database.database import Base

@@ -1,10 +1,9 @@
-import datetime
-
 from sqlalchemy import Column, INTEGER, String, Boolean, ForeignKey, Date
 from sqlalchemy.orm import  relationship
 
 from application.models.model_shedule import Shedule
 from infrastructure.database.database import Base
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -20,7 +19,6 @@ class User(Base):
     shedule = relationship('Shedule', back_populates="user")
     admin_id = Column(INTEGER, ForeignKey("users.id"))
     #admin = relationship('User', back_populates='admin')
-
 
 
 class Code(Base):

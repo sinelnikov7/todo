@@ -38,6 +38,7 @@ class TaskGet(BaseModel):
     color_priority: str
     date: datetime.date
 
+
 class TaskGetOne(BaseModel):
 
     success: Optional[bool] = None
@@ -82,4 +83,4 @@ class TaskEdit(BaseModel):
 
 
 class TaskDelete(BaseModel):
-    staus: Dict = {"status": 200}
+    status: Dict = {"status": 200}

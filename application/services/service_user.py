@@ -24,6 +24,20 @@ class ServiceUser:
         await session.close()
         return user.id
 
+    async def create_staff(self, name, surname, email, password, admin_id,  data_create, session):
+        """Создание нового сотрудника"""
+        hash_password = self.pwd_context.hash(password)
+        user = User(name=name, surname=surname, email=email, password=hash_password,
+                    activate=True,
+                    data_create=data_create,
+                    is_admin=False, admin_id=admin_id)
+        session.add(user)
+        await session.commit()
+        await session.refresh(user)
+        await session.close()
+        return user
+
+
     async def get_user_code(self, user_id, session):
         """Получить код активации юзера"""
         query = select(Code.key).where(Code.user_id == user_id)
@@ -37,3 +51,24 @@ class ServiceUser:
         await session.execute(query)
         await session.commit()
         await session.close()
+
+    async def get_user_with_email(self, email, session):
+        """Получить профиль пользователя по email"""
+        query = select(User).where(User.email == email)
+        result = await session.execute(query)
+        user = result.fetchone()[0]
+        return user
+
+    async def get_user_with_id(self, user_id, session):
+        """Получить профиль пользователя по id"""
+        query = select(User).where(User.id == user_id)
+        response = await session.execute(query)
+        response = response.fetchone()[0]
+        return response
+
+    async def get_employees_list(self, user_id, session):
+        """Получить список сотрудников"""
+        query = select(User).where(User.admin_id == user_id)
+        response = await session.execute(query)
+        response = response.fetchmany()
+        return response

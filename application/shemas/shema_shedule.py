@@ -23,6 +23,7 @@ class SheduleSchemaPost(BaseModel):
 
     date: datetime.date
 
+
 class SheduleResponseWithTasks(BaseModel):
     success: bool
     id: int
