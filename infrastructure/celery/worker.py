@@ -1,12 +1,18 @@
+import asyncio
+
+from celery import Celery
+
 import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 import dotenv
-from celery import Celery
 
-celery = Celery('server', broker='redis://127.0.0.1:6379')
+
+celery = Celery('server', broker='pyamqp://admin:admin123@localhost:5672//')
+celery.autodiscover_tasks(['infrastructure.celery'])
+
 dotenv.load_dotenv()
 SECRET = os.environ.get('SECRET')
 EMAIL_SENDER = os.environ.get('EMAIL_SENDER')

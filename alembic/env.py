@@ -6,11 +6,11 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from src.config import DB_CONFIG, DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME
-from src.database import Base
-from src.auth.models import User, Code
-from src.todo.models import Shedule
-
+from config import DB_CONFIG, DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME
+from infrastructure.database.database import Base
+from application.models.model_user import User, Code
+from application.models.model_shedule import Shedule
+from application.models.model_task import Task
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

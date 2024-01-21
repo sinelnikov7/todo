@@ -1,17 +1,7 @@
-from sqlalchemy import Column, INTEGER, String, ForeignKey, DATE, TEXT, UniqueConstraint, TIME, Boolean
+from sqlalchemy import Column, INTEGER, String, ForeignKey, TEXT, TIME
 from sqlalchemy.orm import relationship
 
-from src.database import Base
-
-
-class Shedule(Base):
-    __tablename__ = 'shedule'
-    id = Column(INTEGER, primary_key=True)
-    date = Column(DATE)
-    user_id = Column(INTEGER, ForeignKey("users.id"))
-    user = relationship('User', back_populates='shedule')
-    task = relationship('Task', back_populates='shedule', uselist=True)
-    __table_args__ = (UniqueConstraint('date', 'user_id'),)
+from infrastructure.database.database import Base
 
 
 class Task(Base):
@@ -25,5 +15,3 @@ class Task(Base):
     #from_admin = Column(Boolean, default=False)
     shedule_id = Column(INTEGER, ForeignKey("shedule.id"))
     shedule = relationship('Shedule', back_populates='task')
-
-
