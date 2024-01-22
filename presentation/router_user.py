@@ -48,18 +48,18 @@ async def logout(request: Request):
 async def get_profile(access_token: Annotated[str | None, Header()] = None,
                       session: AsyncSession = Depends(get_session)) -> Union[UserProfile, dict]:
     """Получить профиль пользователя"""
-    return await get_user_profile(access_token, session)
+    return await get_user_profile(session, access_token=access_token)
 
 
 @auth_router.post("/staff")
 async def add_staff(user_shema: UserSchema, access_token: Annotated[str | None, Header()] = None,
                     session: AsyncSession = Depends(get_session)) -> Union[UserSchema, dict]:
     """Создание сотрудника"""
-    return await registration_staff(user_shema, access_token, session)
+    return await registration_staff(user_shema,session,  access_token=access_token)
 
 
 @auth_router.get('/staff')
 async def get_staff_list(access_token: Annotated[str | None, Header()] = None,
                          session: AsyncSession = Depends(get_session)) -> Union[List[UserProfile], dict]:
     """Получить список сотрудников"""
-    return await staff_list(access_token, session)
+    return await staff_list(session, access_token=access_token)

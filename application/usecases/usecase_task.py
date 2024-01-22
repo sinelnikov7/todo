@@ -1,23 +1,18 @@
-import jwt
-from jwt import DecodeError
-from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
 
 from application.services.service_task import ServiceTask
 from application.shemas.shema_task import TaskGetOne
-from config import SECRET
 from application.usecases.usecase_shedule import usecase_shedule
+from application.support.decorators import is_authorizated_api
+from application.support.support_functions import get_user_id
 
 
 use_task = ServiceTask()
 
-
-async def create_tak(task, access_token, session):
-    try:
-        token = access_token
-        user_id = jwt.decode(token, SECRET, algorithms=['HS256']).get("user_id")
-    except DecodeError:
-        raise HTTPException(status_code=401, detail='Неверный токен доступа')
+@is_authorizated_api
+async def create_tak(task, session,  access_token=None):
+    """Создание задачи"""
+    user_id = get_user_id(access_token)
     if task.user_id != None:
         user_id = task.user_id
     exist_shedule = await usecase_shedule.get_shedule_with_task(task.date, user_id, session)
@@ -38,13 +33,10 @@ async def create_tak(task, access_token, session):
                         color_priority=task.color_priority, date=task.date)
         return response
 
-
-async def task_get(id, access_token, session):
-    try:
-        token = access_token
-        user_id = jwt.decode(token, SECRET, algorithms=['HS256']).get("user_id")
-    except DecodeError:
-        raise HTTPException(status_code=401, detail='Неверный токен доступа')
+@is_authorizated_api
+async def task_get(id, session, access_token=None):
+    """Получение задачи"""
+    user_id = get_user_id(access_token)
     try:
         task = await use_task.get(id, session)
         if task.shedule.user_id == user_id:
@@ -56,22 +48,14 @@ async def task_get(id, access_token, session):
         return {"status": f"Не удалось найти задачу с id={id}"}
     return response
 
-
-async def task_edit(task, id, access_token, session):
-    try:
-        token = access_token
-        user_id = jwt.decode(token, SECRET, algorithms=['HS256']).get("user_id")
-    except DecodeError:
-        raise HTTPException(status_code=401, detail='Неверный токен доступа')
-    response = await use_task.edit(task, id, session)
+@is_authorizated_api
+async def task_edit(task, id, session,  access_token=None):
+    """Обновление задачи"""
+    await use_task.edit(task, id, session)
     return {"status": 200}
 
-
-async def task_dellete(id, access_token, session):
-    try:
-        token = access_token
-        user_id = jwt.decode(token, SECRET, algorithms=['HS256']).get("user_id")
-    except DecodeError:
-        raise HTTPException(status_code=401, detail='Неверный токен доступа')
-    response = await use_task.dellete(id, session)
+@is_authorizated_api
+async def task_dellete(id, session, access_token=None):
+    """Удаление задачи"""
+    await use_task.dellete(id, session)
     return {"status": 200}

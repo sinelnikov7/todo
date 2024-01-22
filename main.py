@@ -1,7 +1,6 @@
 import jwt
 from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, Request
-from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -9,12 +8,11 @@ from infrastructure.database.database import async_session
 from presentation.router_user import auth_router
 from presentation.router_shedule import shedule_router
 from presentation.router_task import task_router
-from config import HOST, SECRET
+from config import HOST, SECRET, templates
 
 
 app = FastAPI(title="Main")
 app.include_router(auth_router)
-templates = Jinja2Templates(directory="templates/")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(shedule_router)
 app.include_router(task_router)
@@ -39,10 +37,13 @@ async def index(request: Request):
 
 
 
+
+
+
+
 # def is_authorizated(fn):
 #     @wraps(fn)
 #     async def wrapper(*args, **kwargs):
-#
 #         try:
 #             token = kwargs["request"].cookies.get('bearer', None)
 #             user = jwt.decode(token, SECRET, algorithms=['HS256'])
