@@ -16,22 +16,26 @@ task_router = APIRouter(
 @task_router.post('/task', status_code=201)
 async def add_task(task: TaskPost, access_token: Annotated[str | None, Header()] = None,
                    session: AsyncSession = Depends(get_session)) -> Union[TaskGet, dict]:
-    return await create_tak(task, access_token, session)
+    """Создание задачи"""
+    return await create_tak(task, session,  access_token=access_token)
 
 
 @task_router.get('/task/{id}')
-async def get_task(id:int = id,  access_token: Annotated[str | None, Header()] = None,
+async def get_task(id: int = id,  access_token: Annotated[str | None, Header()] = None,
                    session: AsyncSession = Depends(get_session)) -> Union[TaskGetOne, dict]:
-    return await task_get(id, access_token, session)
+    """Получение задачи"""
+    return await task_get(id, session, access_token=access_token)
 
 
 @task_router.patch('/task/{id}', status_code=200)
 async def edit_task(task: TaskEdit, id:int = id,  access_token: Annotated[str | None, Header()] = None,
                     session: AsyncSession = Depends(get_session))  -> Union[TaskGet, dict]:
-    return await task_edit(task, id, access_token, session)
+    """Обновление задачи"""
+    return await task_edit(task, id, session, access_token=access_token)
 
 
 @task_router.delete('/task/{id}', status_code=200)
 async def dellete_task(id:int = id,  access_token: Annotated[str | None, Header()] = None,
                        session: AsyncSession = Depends(get_session))  -> Union[TaskDelete, dict]:
-    return await task_dellete(id, access_token, session)
+    """Удаление задачи"""
+    return await task_dellete(id, session,  access_token=access_token)

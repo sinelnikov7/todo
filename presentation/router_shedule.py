@@ -1,14 +1,7 @@
-import os
 from datetime import date
 
-import jwt
-import dotenv
-from jwt import DecodeError
 from typing import Union, Annotated
-from fastapi import APIRouter, Depends, Header, HTTPException
-
-
-
+from fastapi import APIRouter, Depends, Header
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from application.shemas.shema_shedule import SheduleSchemaPost, SheduleResponse, SheduleResponseWithTasks
@@ -24,13 +17,15 @@ shedule_router = APIRouter(
 @shedule_router.post('/shedule', status_code=201)
 async def add_shedule(shedule: SheduleSchemaPost, access_token: Annotated[str | None, Header()] = None,
                       session:AsyncSession = Depends(get_session)) -> Union[SheduleResponse, dict]:
-    return await create_chedule(shedule, access_token, session)
+    """Создание расписания"""
+    return await create_chedule(shedule, session, access_token=access_token)
 
 
 @shedule_router.get('/shedule/', status_code=200)
 async def get_shedule(get_date: date, access_token: Annotated[str | None, Header()] = None,
                       session: AsyncSession = Depends(get_session)) -> Union[SheduleResponseWithTasks, dict]:
-    return await shedule_get(get_date, access_token, session)
+    """Получение расписания"""
+    return await shedule_get(get_date, session, access_token=access_token)
 
 
 
